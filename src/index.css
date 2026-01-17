@@ -1,0 +1,367 @@
+@import "tailwindcss";
+
+:root {
+    --background-color-1: #1A1A1A;
+    --background-color-2: #B49764;
+    --background-color-3: #A19991;
+    --background-color-4: #242424;
+
+    --font-family-1: "Cormorant Garamond", serif;
+    --font-family-2: "DM Sans", sans-serif;
+
+    --text-color-1: #EFECE7;
+    --text-color-2: #B49764;
+    --text-color-3: #A19991;
+    --text-color-4: #AFADA9;
+    --text-color-5: #3D5C4D;
+
+    --hover-color-1: #B49764;
+    --hover-color-2: #EFECE7;
+
+    --nav-family-font: var(--font-family-2);
+    --nav-underline-color: var(--hover-color-1);
+    --nav-hover-color: var(--hover-color-2);
+    --nav-normal-color: var(--text-color-3);
+    --nav-underline-height: 2px;
+
+    --grid-color: #1E1E1E;
+    --grid-size: 86px;
+
+    --fade-up-start-y: 28px;
+    --entry-duration: 800ms;
+    --base-delay: 120ms;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.font-family-1 {
+    font-family: var(--font-family-1);
+}
+
+.font-family-2 {
+    font-family: var(--font-family-2);
+}
+
+.nav-item {
+    color: var(--nav-normal-color);
+    transition: color 300ms ease;
+}
+
+/* warna berubah saat hover di mana saja dalam <a> */
+.nav-item:hover {
+    color: var(--nav-hover-color);
+}
+
+/* ===== Text ===== */
+.nav-link {
+    position: relative;
+    font-family: var(--nav-family-font);
+}
+
+/* underline default */
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: var(--nav-underline-height);
+    width: 100%;
+    background-color: var(--nav-underline-color);
+
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms ease;
+}
+
+/* 🔹 underline hanya aktif jika hover di text */
+.nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+.bg-grid {
+    background-image:
+        linear-gradient(to right,
+            var(--grid-color) 1px,
+            transparent 1px),
+        linear-gradient(to bottom,
+            var(--grid-color) 1px,
+            transparent 1px);
+
+    background-size: var(--grid-size) var(--grid-size);
+    background-position: center;
+}
+
+.project-item {
+    transition: all 300ms ease;
+}
+
+.project-item:hover .project-title {
+    color: var(--text-color-2);
+    transition: color 300ms ease;
+}
+
+.project-image-wrapper {
+    position: relative;
+}
+
+.project-image-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: color-mix(in srgb, var(--background-color-2) 35%, transparent 65%);
+    opacity: 0;
+    transition: opacity 300ms ease;
+    pointer-events: none;
+}
+
+.project-item:hover .project-image-overlay {
+    opacity: 0.25;
+    /* atur sesuai taste */
+}
+
+.project-item:hover .project-arrow {
+    transform: translate(6px, -6px);
+}
+
+/* =========================================================
+   ENTRY ANIMATION (UNCHANGED CORE, SAFE)
+========================================================= */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(var(--fade-up-start-y));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.entry {
+    opacity: 0;
+    animation-name: fadeUp;
+    animation-duration: var(--entry-duration);
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    animation-delay: var(--entry-delay, 0ms);
+    will-change: transform, opacity;
+}
+
+/* =========================================================
+   ENTRY STAGGER (UNCHANGED)
+========================================================= */
+
+.hero-left {
+    --entry-delay: calc(var(--base-delay) * 2);
+}
+
+.hero-center {
+    --entry-delay: calc(var(--base-delay) * 3);
+}
+
+.hero-right {
+    --entry-delay: calc(var(--base-delay) * 0.5);
+}
+
+@media (min-width: 768px) {
+    .hero-left {
+        --entry-delay: calc(var(--base-delay) * 0.5);
+    }
+
+    .hero-center {
+        --entry-delay: calc(var(--base-delay) * 2);
+    }
+
+    .hero-right {
+        --entry-delay: calc(var(--base-delay) * 3);
+    }
+}
+
+/* =========================================================
+   CHILD ENTRY (UNCHANGED LOGIC, SAFE)
+========================================================= */
+
+.hero-block>* {
+    opacity: 0;
+    animation-name: fadeUp;
+    animation-duration: 560ms;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    animation-delay: calc(var(--entry-delay) + var(--child-delay) + 120ms);
+    will-change: transform, opacity;
+}
+
+.hero-block>*:nth-child(1) {
+    --child-delay: 0ms;
+}
+
+.hero-block>*:nth-child(2) {
+    --child-delay: 100ms;
+}
+
+.hero-block>*:nth-child(3) {
+    --child-delay: 200ms;
+}
+
+.hero-block>*:nth-child(4) {
+    --child-delay: 300ms;
+}
+
+.hero-block>*:nth-child(5) {
+    --child-delay: 400ms;
+}
+
+.hero-block>*:nth-child(6) {
+    --child-delay: 500ms;
+}
+
+.hero-block>*:nth-child(7) {
+    --child-delay: 600ms;
+}
+
+/* =========================================================
+   SCROLL INDICATOR (NEW – NO COLLISION)
+========================================================= */
+
+/* wrapper – TIDAK ada transform */
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ---------- SCROLL TEXT LOOP ---------- */
+
+@keyframes scrollText {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.scroll-text {
+    animation: scrollText 3s linear infinite;
+    will-change: transform;
+}
+
+/* ---------- SCROLL LINE BASE ---------- */
+
+.scroll-line {
+    position: relative;
+    width: 2px;
+    height: 64px;
+    background: linear-gradient(to bottom,
+            color-mix(in_srgb, var(--background-color-3) 45%, transparent),
+            color-mix(in_srgb, var(--background-color-3) 10%, transparent));
+    overflow: hidden;
+}
+
+/* ---------- FLOW HIGHLIGHT ---------- */
+
+@keyframes scrollLineFlow {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            transparent,
+            var(--background-color-3),
+            transparent);
+    animation: scrollLineFlow 3s linear infinite;
+}
+
+/* =========================================================
+   REVEAL ANIMATION
+========================================================= */
+/* base */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    will-change: transform, opacity;
+}
+
+/* active */
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 700ms ease-out,
+        transform 700ms cubic-bezier(.22, .61, .36, 1);
+}
+
+/* stagger */
+.reveal.d1 {
+    transition-delay: 100ms;
+}
+
+.reveal.d2 {
+    transition-delay: 200ms;
+}
+
+.reveal.d3 {
+    transition-delay: 300ms;
+}
+
+.reveal.d4 {
+    transition-delay: 400ms;
+}
+
+.reveal.d5 {
+    transition-delay: 500ms;
+}
+
+.reveal.d6 {
+    transition-delay: 600ms;
+}
+
+/* ===============================
+   DOMAIN DESCRIPTION RE-ANIMATE
+================================ */
+
+@keyframes domainFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* hanya dipakai untuk domain change */
+.domain-fade-up {
+    animation: domainFadeUp 420ms ease-out forwards;
+    will-change: transform, opacity;
+}
